@@ -24,7 +24,7 @@ The procedure again follows Lee (2005) as babys_first, except that locations are
     τ2::Float64 = 0.5     # Variable cost of moving
     δ::Float64 = 0.9    # Expontential discount rate
     β::Float64 = 1      # Present bias
-    μ::Float64 = 0      # Spatial diffusion
+    μ::Float64 = 0      # Spatial diffusion factor
 end
 
 para = parameters()
