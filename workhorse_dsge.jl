@@ -17,11 +17,11 @@ The procedure again follows Lee (2005) as babys_first, except that locations are
     σ2::Float64 = -0.5  # Weight on -log(prices)
     ρ::Float64 = 0.04   # Inverse elasticity of rent
     ω::Float64 = -0.03  # Inverse elasticity of wage
-    T::Int64 = 2       # Number of time periods
+    T::Int64 = 10       # Number of time periods
     n::Int64 = 5000     # Number of agents
-    J::Int64 = 2       # Number of cities
-    τ1::Float64 = 5      # Fixed cost of moving
-    τ2::Float64 = 0.5     # Variable cost of moving
+    J::Int64 = 3        # Number of cities
+    τ1::Float64 = 5     # Fixed cost of moving
+    τ2::Float64 = 0.5   # Variable cost of moving
     δ::Float64 = 0.9    # Expontential discount rate
     β::Float64 = 1      # Present bias
     μ::Float64 = 0      # Spatial diffusion factor
@@ -44,7 +44,6 @@ eq_solver(): General equilibrium function
             + Inner loops that establish a fixed point in each year given a current guess of prices and the resulting EMAX values for each city
             + Outer loop that checks whether behavior induced by expectations produces prices sufficiently close to the guess and updates expectations accordingly
 """
-
 
 
 function eq_solver(para, space, guess, R_j, W_j, A_jt, e_jt, max_iter, inner_maxit)
@@ -280,7 +279,7 @@ function eq_solver(para, space, guess, R_j, W_j, A_jt, e_jt, max_iter, inner_max
                 # Calculate resulting prices
                 for j in 1:J
                     # Count population for each j in time t
-                    pop_jt[t,j] = count(i -> i ==j, agent_choices[t,:])
+                    pop_jt[t,j] = count(i -> i == j, agent_choices[t,:])
                 end # j-loop
                 # Store resulting wages and rents
                 prices_act[t,:,:] = prices(t, pop_jt, W_j, R_j, para, dist)
@@ -375,14 +374,13 @@ end #guesser
 
 """------------- MODEL SETUP ---------------"""
 e_jt = AgentShockmatrix(para)
-#W_j, R_j = tech_levels(para,10,10)
-#A_jt = amenities(para)
-W_j = ones(2)
-R_j = 2*ones(2)
-A_jt = zeros(2,2)
+W_j, R_j = tech_levels(para,10,10)
+A_jt = amenities(para)
+#W_j = ones(2)
+#R_j = 2*ones(2)
+#A_jt = zeros(2,2)
 guess = guesser(para)
 space = space_gen(para, 10)
-
 
 eq_prices, pop_track, EMAX_track = eq_solver(para, space, guess, R_j, W_j, A_jt, e_jt, 100, 200)
 """-----------------------------------------"""
